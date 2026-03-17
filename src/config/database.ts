@@ -1,8 +1,9 @@
 import { Pool } from "pg";
 import logger from "./logger";
+import { DATABASE_URL } from "./env"
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: DATABASE_URL,
     ssl: process.env.NODE_ENV === "production"
         ? { rejectUnauthorized: false }
         : false,
