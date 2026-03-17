@@ -1,5 +1,5 @@
 import app from './app'
-import connectDB from './config/database';
+import { connectDB } from './config/database';
 import { PORT } from "./config/env"
 
 connectDB();
