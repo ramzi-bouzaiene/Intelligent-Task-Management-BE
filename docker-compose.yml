@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ramzi
+      POSTGRES_DB: intelligent-tm
+    ports:
+      - "5432:5432"
+
+  mcp:
+    image: crystaldba/postgres-mcp
+    container_name: postgres_mcp
+    restart: always
+    depends_on:
+      - postgres
+    stdin_open: true
+    tty: true
+    environment:
+      DATABASE_URI: postgresql://postgres:ramzi@host.docker.internal:5432/intelligent-tm
+    command: ["--access-mode=restricted"]
