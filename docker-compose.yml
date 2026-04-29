@@ -1,25 +1,67 @@
-version: "3.9"
-
 services:
+
+  # ─── PostgreSQL Database ───────────────────────────────────────────
   postgres:
-    image: postgres:16
-    container_name: postgres_db
-    restart: always
+    image: postgres:16-alpine
+    container_name: intelligent-tm-db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ramzi
       POSTGRES_DB: intelligent-tm
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d intelligent-tm"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-  mcp:
+  # ─── postgres-mcp SSE Server ───────────────────────────────────────
+  postgres-mcp:
     image: crystaldba/postgres-mcp
-    container_name: postgres_mcp
-    restart: always
-    depends_on:
-      - postgres
-    stdin_open: true
-    tty: true
+    container_name: intelligent-tm-mcp
+    restart: unless-stopped
     environment:
-      DATABASE_URI: postgresql://postgres:ramzi@host.docker.internal:5432/intelligent-tm
-    command: ["--access-mode=restricted"]
+      DATABASE_URI: postgresql://postgres:ramzi@postgres:5432/intelligent-tm
+    ports:
+      - "8002:8000"
+    command: ["--access-mode=unrestricted", "--transport=sse"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ─── Express Backend ───────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: intelligent-tm-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: ramzi
+      DB_NAME: intelligent-tm
+      DATABASE_URL: postgresql://postgres:ramzi@postgres:5432/intelligent-tm?sslmode=disable
+      PGSSLMODE: disable
+      MCP_URL: http://postgres-mcp:8002
+      JWT_SECRET: ${JWT_SECRET}
+      MODEL_NAME: ${MODEL_NAME}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgres-mcp:
+        condition: service_started
+    volumes:
+      - ./src/migrations:/app/src/migrations:ro
+
+volumes:
+  postgres_data:
