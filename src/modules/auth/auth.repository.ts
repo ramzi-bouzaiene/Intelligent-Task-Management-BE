@@ -5,7 +5,7 @@ export const createUser = async (user: User): Promise<User> => {
     const query = `
     INSERT INTO users (name, email, password, role)
     VALUES ($1, $2, $3, $4)
-    RETURNING $*;
+    RETURNING *;
     `;
 
     const value = [user.name, user.email, user.password, user.role];
