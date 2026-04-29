@@ -1,27 +1,24 @@
-import e from "express";
 import { pool } from "../../config/database";
 import { Task } from "../../database/models/task.model";
 import { taskStatus } from "../../shared/constants/taskStatus";
 
 export const createTask = async (task: Task): Promise<Task> => {
     const query = `
-    INSERT INTO tasks (title, description, status, user_id)
-    VALUES ($1, $2, $3, $4)
+    INSERT INTO tasks (title, description, status, user_id, project_id)
+    VALUES ($1, $2, $3, $4, $5)
     RETURNING *;
     `;
-    const values = [task.title, task.description, task.status, task.user_id];
+    const values = [task.title, task.description, task.status, task.user_id, task.project_id];
     const result = await pool.query(query, values);
     return result.rows[0];
 }
 
 export const getTasksByUserId = async (userId: number): Promise<Task[]> => {
-    {
-        const query = `
-    SELECT * FROM tasks WHERE user_id = $1;
-    `;
-        const result = await pool.query(query, [userId]);
-        return result.rows;
-    }
+     const result = await pool.query(
+        'SELECT * FROM tasks WHERE user_id = $1',
+        [userId]
+    );
+    return result.rows;
 }
 
 export const updateTaskStatus = async (taskId: number, status: typeof taskStatus.PENDING | typeof taskStatus.IN_PROGRESS | typeof taskStatus.COMPLETED): Promise<Task> => {

@@ -12,7 +12,7 @@ const options: swaggerJsdoc.Options = {
 
         servers: [
             {
-                url: `http://localhost:${PORT}/api/v1`,
+                url: `http://localhost:${PORT}`,
                 description: "Development server",
             },
         ],
@@ -67,14 +67,53 @@ const options: swaggerJsdoc.Options = {
                         token: { type: "string" },
                     },
                 },
+                Task: {
+                    type: "object",
+                    required: ["project_id", "title", "status"],
+                    properties: {
+                        id: { type: "number", example: 1 },
+                        project_id: { type: "number", example: 1, description: "ID of the related project" },
+                        title: { type: "string", example: "Complete project proposal" },
+                        description: { type: "string", example: "Finish the initial draft of the project proposal" },
+                        status: { type: "string", example: "pending" },
+                        assigned_to: { type: "number", example: 1 },
+                        due_date: {
+                            type: "string",
+                            format: "date-time",
+                        },
+                    },
+                },
+                GenerateAIRequest: {
+                    type: "object",
+                    properties: {
+                        prompt: { type: "string", example: "What is the capital of Tunisia?" },
+                    },
+                },
+                GenerateAIResponse: {
+                    type: "object",
+                    properties: {
+                        response: { type: "string", example: "The capital of Tunisia is Tunis." },
+                    },
+                },
+                Project: {
+                    type: "object",
+                    properties: {
+                        id: { type: "number", example: 1 },
+                        name: { type: "string", example: "Project Alpha" },
+                        description: { type: "string", example: "A new project for developing the alpha version" },
+                        user_id: { type: "number", example: 1 },
+                        created_at: {
+                            type: "string",
+                            format: "date-time",
+                        },
+                        updated_at: {
+                            type: "string",
+                            format: "date-time",
+                        },
+                    },
+                }
             },
-        },
-
-        security: [
-            {
-                bearerAuth: [],
-            },
-        ],
+        }
     },
 
     apis: ["./src/modules/**/*.ts"],

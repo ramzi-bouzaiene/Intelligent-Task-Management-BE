@@ -6,14 +6,15 @@ export const createTaskSchema = z.object({
     description: z.string().optional(),
     status: z.enum([taskStatus.PENDING, taskStatus.IN_PROGRESS, taskStatus.COMPLETED]).default(taskStatus.PENDING),
     user_id: z.number().optional(),
+    project_id: z.number(),
     created_at: z.date().default(() => new Date()),
-
 })
 
 export const updateTaskSchema = z.object({
     title: z.string().min(1).optional(),
     description: z.string().optional(),
     status: z.enum([taskStatus.PENDING, taskStatus.IN_PROGRESS, taskStatus.COMPLETED]).optional(),
+    project_id: z.number().optional(),
     updated_at: z.date().default(() => new Date()),
 })
 

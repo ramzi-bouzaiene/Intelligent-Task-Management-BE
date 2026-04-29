@@ -1,0 +1,40 @@
+{
+  "roles": [
+    {
+      "name": "admin",
+      "permissions": ["*"]
+
+    },
+    {
+      "name": "project_manager",
+      "permissions": [
+        "create_project",
+        "read_project",
+        "update_project",
+        "delete_project",
+        "create_task",
+        "read_task",
+        "update_task",
+        "delete_task",
+        "update_task_status",
+        "create_comment",
+        "read_comment",
+        "update_comment",
+        "delete_comment"
+      ]
+    },
+    {
+      "name": "developer",
+      "permissions": [
+        "read_project",
+        "read_task",
+        "update_task_status",
+        "create_comment",
+        "read_comment",
+        "update_comment",
+        "delete_comment",
+        "read_notification"
+      ]
+    }
+  ]
+}
