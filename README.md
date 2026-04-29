@@ -77,5 +77,19 @@ A modern, intelligent task management backend built with Node.js, Express, TypeS
 ├── tsconfig.json
 └── README.md
 ```
----
-**Author:** Ramzi Bouzaiene
+
+## Seeding the Database with Sample Data
+
+To populate your database with sample users and tasks, run the seed script:
+
+```bash
+npx ts-node src/scripts/seed.ts
+```
+
+- This will delete all existing users and tasks, then insert demo users and related tasks.
+- Make sure your `.env` file is configured and the database is running.
+
+> **Note:** You can also run the script with `npm run seed` if you add a script entry:
+> ```json
+> "seed": "ts-node src/scripts/seed.ts"
+> ```
