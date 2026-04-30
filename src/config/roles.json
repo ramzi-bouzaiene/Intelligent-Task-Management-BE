@@ -27,13 +27,19 @@
       "name": "developer",
       "permissions": [
         "read_project",
-        "read_task",
+        "read_own_task",
         "update_task_status",
         "create_comment",
         "read_comment",
         "update_comment",
         "delete_comment",
         "read_notification"
+      ]
+    },
+    {
+      "name": "user",
+      "permissions": [
+        "read_own_task"
       ]
     }
   ]
