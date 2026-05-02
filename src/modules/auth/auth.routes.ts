@@ -1,6 +1,6 @@
-import { Router } from "express";
-import * as authController from "./auth.controller";
-import { authMiddleware } from "../../middleware/auth.middleware";
+import { Router } from 'express';
+import * as authController from './auth.controller';
+import { authMiddleware } from '../../middleware/auth.middleware';
 
 const route = Router();
 
@@ -22,7 +22,19 @@ const route = Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/RegisterInput'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 format: password
+ *               role:
+ *                 type: string
+ *                 enum: [admin, project_manager, developer, user]
  *     responses:
  *       201:
  *         description: User created successfully
@@ -31,7 +43,7 @@ const route = Router();
  *             schema:
  *               $ref: '#/components/schemas/AuthResponse'
  */
-route.post("/register", authController.register);
+route.post('/register', authController.register);
 
 /**
  * @swagger
@@ -53,7 +65,7 @@ route.post("/register", authController.register);
  *             schema:
  *               $ref: '#/components/schemas/AuthResponse'
  */
-route.post("/login", authController.login);
+route.post('/login', authController.login);
 
 /**
  * @swagger
@@ -67,8 +79,8 @@ route.post("/login", authController.login);
  *       200:
  *         description: Current user info
  */
-route.get("/me", authMiddleware, (req, res) => {
-    res.json((req as any).user);
+route.get('/me', authMiddleware, (req, res) => {
+  res.json((req as any).user);
 });
 
-export default route
+export default route;
