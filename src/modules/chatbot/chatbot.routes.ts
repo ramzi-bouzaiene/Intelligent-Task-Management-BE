@@ -1,7 +1,6 @@
-
-import { Router } from "express";
-import { handleGenerateAI } from "./chatbot.controller";
-import { authMiddleware } from "../../middleware/auth.middleware";
+import { Router } from 'express';
+import { handleGenerateAI } from './chatbot.controller';
+import { authMiddleware } from '../../middleware/auth.middleware';
 
 const router = Router();
 
@@ -27,6 +26,6 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/GenerateAIResponse'
  */
-router.post("/chatbot/ai", authMiddleware, handleGenerateAI);
+router.post('/chatbot/ai', authMiddleware, handleGenerateAI);
 
 export default router;

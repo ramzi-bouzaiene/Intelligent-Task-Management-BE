@@ -4,39 +4,33 @@ import { RegisterDto, LoginDto } from './auth.dto';
 import { generateToken } from '../../shared/utils/jwt';
 
 export const register = async (data: RegisterDto) => {
-    const existingUser = await getUserByEmail(data.email);
-
-    if (existingUser) {
-        throw new Error('Email already in use');
-    }
-    const hashPassword = await bcrypt.hash(data.password, 10);
-
-    const user = await createUser({
-        ...data,
-        password: hashPassword,
-        role: 'user',
-    });
-
-    const token = generateToken(user);
-
-    return { user, token };
+  const existingUser = await getUserByEmail(data.email);
+  if (existingUser) {
+    throw new Error('Email already in use');
+  }
+  const hashPassword = await bcrypt.hash(data.password, 10);
+  const user = await createUser({
+    ...data,
+    password: hashPassword,
+  });
+  const token = generateToken(user);
+  return { user, token };
 };
 
 export const login = async (data: LoginDto) => {
-    const user = await getUserByEmail(data.email);
+  const user = await getUserByEmail(data.email);
 
-    if (!user) {
-        throw new Error('Invalid email or password');
-    }
+  if (!user) {
+    throw new Error('Invalid email or password');
+  }
 
-    const userExist = await bcrypt.compare(data.password, user.password);
+  const userExist = await bcrypt.compare(data.password, user.password);
 
-    if (!userExist) {
+  if (!userExist) {
+    throw new Error('Invalid email or password');
+  }
 
-        throw new Error('Invalid email or password');
-    }
+  const token = generateToken(user);
 
-    const token = generateToken(user);
-
-    return { user, token };
+  return { user, token };
 };
