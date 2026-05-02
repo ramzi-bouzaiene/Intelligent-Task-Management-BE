@@ -1,7 +1,7 @@
 export interface GenerateAIRequestDTO {
-    prompt: string;
+  prompt: string;
 }
 
 export interface GenerateAIResponseDTO {
-    response: string;
+  response: string;
 }

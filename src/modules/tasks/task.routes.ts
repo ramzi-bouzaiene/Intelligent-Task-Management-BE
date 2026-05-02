@@ -1,6 +1,7 @@
-import { Router } from "express";
-import * as taskController from "./task.controller";
-import { authMiddleware } from "../../middleware/auth.middleware";
+import { Router } from 'express';
+import * as taskController from './task.controller';
+import { authMiddleware } from '../../middleware/auth.middleware';
+import * as rbacMiddleware from '../../middleware/rbacMiddleware';
 
 const route = Router();
 
@@ -33,7 +34,12 @@ const route = Router();
  *             schema:
  *               $ref: '#/components/schemas/Task'
  */
-route.post("/", authMiddleware, taskController.createTask);
+route.post(
+  '/',
+  authMiddleware,
+  rbacMiddleware.checkPermission('create_task'),
+  taskController.createTask,
+);
 
 /****************************************
  * @swagger
@@ -53,7 +59,12 @@ route.post("/", authMiddleware, taskController.createTask);
  *               items:
  *                 $ref: '#/components/schemas/Task'
  */
-route.get("/", authMiddleware, taskController.getTasks);
+route.get(
+  '/',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_tasks'),
+  taskController.getTasks,
+);
 
 /****************************************
  * @swagger
@@ -76,7 +87,12 @@ route.get("/", authMiddleware, taskController.getTasks);
  *       404:
  *         description: Task not found
  */
-route.delete("/:id", authMiddleware, taskController.deleteTask);
+route.delete(
+  '/:id',
+  authMiddleware,
+  rbacMiddleware.checkPermission('delete_task'),
+  taskController.deleteTask,
+);
 
 /****************************************
  * @swagger
@@ -103,7 +119,12 @@ route.delete("/:id", authMiddleware, taskController.deleteTask);
  *       404:
  *         description: Task not found
  */
-route.get("/:id", authMiddleware, taskController.getTaskDetails);
+route.get(
+  '/:id',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_task'),
+  taskController.getTaskDetails,
+);
 
 /****************************************
  * @swagger
@@ -140,7 +161,12 @@ route.get("/:id", authMiddleware, taskController.getTaskDetails);
  *       404:
  *         description: Task not found
  */
-route.patch("/:id/status", authMiddleware, taskController.changeTaskStatus);
+route.patch(
+  '/:id/status',
+  authMiddleware,
+  rbacMiddleware.checkPermission('update_task_status'),
+  taskController.changeTaskStatus,
+);
 
 /****************************************
  * @swagger
@@ -172,6 +198,27 @@ route.patch("/:id/status", authMiddleware, taskController.changeTaskStatus);
  *               items:
  *                 $ref: '#/components/schemas/Task'
  */
-route.get("/search", authMiddleware, taskController.getTasksByQuery);
+route.get(
+  '/search',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_tasks'),
+  taskController.getTasksByQuery,
+);
+
+/****************************************
+ * @swagger
+ * /api/tasks/users/tasks:
+ *  get:
+ *    summary: Get all tasks for the authenticated user
+ *   tags: [Tasks]
+ *   security:
+ *     - bearerAuth: []
+ */
+route.get(
+  '/users/tasks',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_own_task'),
+  taskController.getUserTasks,
+);
 
 export default route;

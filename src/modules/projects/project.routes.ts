@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as projectController from './project.controller';
 import { authMiddleware } from '../../middleware/auth.middleware';
+import * as rbacMiddleware from '../../middleware/rbacMiddleware';
 
 const router = Router();
 
@@ -33,7 +34,12 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/Project'
  */
-router.post('/', authMiddleware, projectController.createProject);
+router.post(
+  '/',
+  authMiddleware,
+  rbacMiddleware.checkPermission('create_project'),
+  projectController.createProject,
+);
 
 /**
  * @swagger
@@ -53,7 +59,12 @@ router.post('/', authMiddleware, projectController.createProject);
  *               items:
  *                 $ref: '#/components/schemas/Project'
  */
-router.get('/', authMiddleware, projectController.getProjects);
+router.get(
+  '/',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_projects'),
+  projectController.getProjects,
+);
 
 /**
  * @swagger
@@ -77,7 +88,12 @@ router.get('/', authMiddleware, projectController.getProjects);
  *             schema:
  *               $ref: '#/components/schemas/Project'
  */
-router.get('/:id', authMiddleware, projectController.getProjectById);
+router.get(
+  '/:id',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_project'),
+  projectController.getProjectById,
+);
 
 /**
  * @swagger
@@ -107,7 +123,12 @@ router.get('/:id', authMiddleware, projectController.getProjectById);
  *             schema:
  *               $ref: '#/components/schemas/Project'
  */
-router.put('/:id', authMiddleware, projectController.updateProject);
+router.put(
+  '/:id',
+  authMiddleware,
+  rbacMiddleware.checkPermission('update_project'),
+  projectController.updateProject,
+);
 
 /**
  * @swagger
@@ -127,6 +148,11 @@ router.put('/:id', authMiddleware, projectController.updateProject);
  *       200:
  *         description: Project deleted successfully
  */
-router.delete('/:id', authMiddleware, projectController.deleteProject);
+router.delete(
+  '/:id',
+  authMiddleware,
+  rbacMiddleware.checkPermission('delete_project'),
+  projectController.deleteProject,
+);
 
 export default router;
