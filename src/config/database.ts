@@ -1,31 +1,29 @@
-import { Pool } from "pg";
-import logger from "./logger";
-import { DATABASE_URL } from "./env"
+import { Pool } from 'pg';
+import logger from './logger';
+import { DATABASE_URL } from './env';
 
 const pool = new Pool({
-    connectionString: DATABASE_URL,
-    ssl: process.env.NODE_ENV === "production"
-        ? { rejectUnauthorized: false }
-        : false,
+  connectionString: DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
 const connectDB = async (retries = 5): Promise<void> => {
-    try {
-        const client = await pool.connect();
-        logger.info("PostgreSQL connected");
+  try {
+    const client = await pool.connect();
+    logger.info('PostgreSQL connected');
 
-        client.release();
-    } catch (error: any) {
-        logger.error(`PostgreSQL error: ${error.message}`);
+    client.release();
+  } catch (error: any) {
+    logger.error(`PostgreSQL error: ${error.message}`);
 
-        if (retries > 0) {
-            logger.warn(`Retrying DB connection... (${retries} left)`);
-            setTimeout(() => connectDB(retries - 1), 5000);
-        } else {
-            logger.error("Failed to connect to PostgreSQL after retries");
-            process.exit(1);
-        }
+    if (retries > 0) {
+      logger.warn(`Retrying DB connection... (${retries} left)`);
+      setTimeout(() => connectDB(retries - 1), 5000);
+    } else {
+      logger.error('Failed to connect to PostgreSQL after retries');
+      process.exit(1);
     }
+  }
 };
 
 export { pool, connectDB };
