@@ -29,3 +29,34 @@ export const deleteProject = async (req: Request, res: Response) => {
   await projectService.deleteProject(Number(req.params.id));
   res.status(204).send();
 };
+
+export const addMemberToProject = async (req: Request, res: Response) => {
+   try {
+    const projectId = Number(req.params.id);
+    const { userIds } = req.body;
+
+    await projectService.addMembersToProject(projectId, userIds);
+
+    res.status(200).json({ message: 'Members added' });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+}
+
+export const removeMemberFromProject = async (req: Request, res: Response, next: Function) => {
+  try {
+    const projectId = Number(req.params.id);
+    const userId = Number(req.params.userId);
+    await projectService.removeMemberFromProject(projectId, userId);
+    res.status(200).json({ message: 'Member removed' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getProjectWithMembers = async (req: Request, res: Response) => {
+  const projectId = Number(req.params.id);
+  const project = await projectService.getProjectWithMembers(projectId);
+  if (!project) return res.status(404).json({ message: 'Project not found' });
+  res.json(project);
+};

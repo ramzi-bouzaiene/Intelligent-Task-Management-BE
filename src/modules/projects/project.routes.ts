@@ -155,4 +155,97 @@ router.delete(
   projectController.deleteProject,
 );
 
+/**
+ * @swagger
+ * /api/projects/{id}/members:
+ *   post:
+ *     summary: Add a member to a project
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AddMemberToProjectInput'
+ *     responses:
+ *       200:
+ *         description: Member added to project successfully
+ */
+router.post(
+  '/:id/members',
+  authMiddleware,
+  rbacMiddleware.checkPermission('add_member_to_project'),
+  projectController.addMemberToProject,
+);
+
+/**
+ * @swagger
+ * /api/projects/{id}/members:
+ *   delete:
+ *     summary: Remove a member from a project
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RemoveMemberFromProjectInput'
+ *     responses:
+ *       200:
+ *         description: Member removed from project successfully
+ */
+router.delete(
+  '/:id/members',
+  authMiddleware,
+  rbacMiddleware.checkPermission('remove_member_from_project'),
+  projectController.removeMemberFromProject,
+);
+
+/**
+ * @swagger
+ * /api/projects/{id}/members:
+ *   get:
+ *     summary: Get members of a project
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: A list of project members
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ */
+router.get(
+  '/:id/members',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_project_members'),
+  projectController.getProjectWithMembers,
+);
+
 export default router;

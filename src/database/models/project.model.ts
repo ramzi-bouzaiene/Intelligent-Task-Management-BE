@@ -5,5 +5,4 @@ export interface Project {
   user_id?: number;
   created_at?: Date;
   updated_at?: Date;
-  members?: string[];
 }
