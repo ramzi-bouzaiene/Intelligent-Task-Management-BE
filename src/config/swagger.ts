@@ -38,6 +38,7 @@ const options: swaggerJsdoc.Options = {
               type: 'string',
               format: 'date-time',
             },
+            avatar: { type: 'string', example: 'https://cdn.example.com/avatars/user-1.jpg' },
           },
         },
 
@@ -116,6 +117,47 @@ const options: swaggerJsdoc.Options = {
               type: 'string',
               format: 'date-time',
             },
+          },
+        },
+        CreateProjectInput: {
+          type: 'object',
+          required: ['name', 'description'],
+          properties: {
+            name: { type: 'string', example: 'Project Alpha' },
+            description: {
+              type: 'string',
+              example: 'A new project for developing the alpha version',
+            },
+          },
+        },
+        UpdateProjectInput: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', example: 'Project Alpha' },
+            description: {
+              type: 'string',
+              example: 'A new project for developing the alpha version',
+            },
+          },
+        },
+        AddMemberToProjectInput: {
+          type: 'object',
+          required: ['userId'],
+          properties: {
+            userId: { type: 'number', example: 1 },
+          },
+        },
+        RemoveMemberFromProjectInput: {
+          type: 'object',
+          required: ['userId'],
+          properties: {
+            userId: { type: 'number', example: 1 },
+          },
+        },
+        Bucket: {
+          type: 'object',
+          properties: {
+            bucketName: { type: 'string', example: 'my-new-bucket' },
           },
         },
       },
