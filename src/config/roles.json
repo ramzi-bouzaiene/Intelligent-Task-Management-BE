@@ -20,7 +20,12 @@
         "create_comment",
         "read_comment",
         "update_comment",
-        "delete_comment"
+        "delete_comment",
+        "add_member_to_project",
+        "read_project_members",
+        "remove_member_from_project",
+        "read_projects",
+        "add_user"
       ]
     },
     {
@@ -33,7 +38,9 @@
         "read_comment",
         "update_comment",
         "delete_comment",
-        "read_notification"
+        "read_notification",
+        "read_projects",
+        "add_avatar"
       ]
     },
     {
