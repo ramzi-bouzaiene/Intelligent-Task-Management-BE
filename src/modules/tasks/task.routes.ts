@@ -206,13 +206,14 @@ route.get(
 );
 
 /****************************************
+/**
  * @swagger
  * /api/tasks/users/tasks:
- *  get:
- *    summary: Get all tasks for the authenticated user
- *   tags: [Tasks]
- *   security:
- *     - bearerAuth: []
+ *   get:
+ *     summary: Get all tasks for the authenticated user
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
  */
 route.get(
   '/users/tasks',
