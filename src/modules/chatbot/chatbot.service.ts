@@ -29,7 +29,6 @@ STRICT SQL RULES:
 - Always add LIMIT 20 unless asked otherwise
 - No markdown, no backticks, no placeholders`;
 
-console.log("[Schema] Loaded:\n", DB_SCHEMA);
 
 const tools = [
   {

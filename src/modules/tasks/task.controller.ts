@@ -53,6 +53,21 @@ export const getTasksByQuery = async (req: Request, res: Response) => {
   res.json(tasks);
 };
 
+export const getKanbanBoard = async (req: Request, res: Response) => {
+  const userId = Number((req as any).user?.id);
+  const board = await taskService.getKanbanBoardService('all', userId);
+  res.json(board);
+};
+
+export const getMyKanbanBoard = async (req: Request, res: Response) => {
+  const userId = Number((req as any).user?.id);
+  if (!Number.isFinite(userId)) {
+    return res.status(401).json({ error: 'Invalid user context' });
+  }
+  const board = await taskService.getKanbanBoardService('mine', userId);
+  res.json(board);
+};
+
 /*export const getTasksByStatus = async (req: Request, res: Response) => {
     const status = req.query.status as typeof taskStatus;
     const tasks = await taskService.getTasksByStatusService(status);
