@@ -1,16 +1,16 @@
 import * as userRepo from '../../modules/users/user.repository';
 import { User } from '../../database/models/user.model';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UserResponseDto } from './user.dto';
 import { uploadAvatar } from '../storage/bucket.service';
 
-export const addAvatarToUser = async (id: number, avatar: string): Promise<User | null> => {
+export const addAvatarToUser = async (id: number, avatar: string): Promise<UserResponseDto | null> => {
   return userRepo.AddAvatarToUser(id, avatar);
 };
 
 export const uploadUserAvatar = async (
   id: number,
   file: Express.Multer.File
-): Promise<User | null> => {
+): Promise<UserResponseDto | null> => {
   const existingUser = await userRepo.getUserById(id);
   if (!existingUser) {
     return null;
@@ -20,6 +20,10 @@ export const uploadUserAvatar = async (
   return userRepo.AddAvatarToUser(id, uploadResult.url);
 };
 
-export const createUser = async (dto: CreateUserDto): Promise<User> => {
+export const createUser = async (dto: CreateUserDto): Promise<UserResponseDto> => {
   return userRepo.createUser(dto);
 };
+
+export const getAllUsers = async (): Promise<UserResponseDto[]> => {
+  return userRepo.getAllUsers();
+}
