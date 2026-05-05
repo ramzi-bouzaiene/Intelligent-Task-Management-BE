@@ -27,3 +27,8 @@ export const addAvatarToUser = async (req: Request, res: Response) => {
   if (!user) return res.status(404).json({ message: 'User not found' });
   res.json(user);
 };
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  const users = await userService.getAllUsers();
+  res.json(users);
+};

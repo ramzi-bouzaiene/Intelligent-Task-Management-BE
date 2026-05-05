@@ -25,7 +25,9 @@
         "read_project_members",
         "remove_member_from_project",
         "read_projects",
-        "add_user"
+        "add_user",
+        "add_avatar",
+        "view_users"
       ]
     },
     {

@@ -40,6 +40,8 @@ const upload = multer({
  *   post:
  *     summary: Create a new user
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -54,7 +56,7 @@ const upload = multer({
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.post('/', checkPermission('add_user'), authMiddleware, userController.createUser);
+router.post('/', authMiddleware, checkPermission('add_user'), userController.createUser);
 
 /**
  * @swagger
@@ -62,6 +64,8 @@ router.post('/', checkPermission('add_user'), authMiddleware, userController.cre
  *   post:
  *     summary: Add an avatar to a user
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -95,6 +99,26 @@ router.post('/', checkPermission('add_user'), authMiddleware, userController.cre
  *             schema:
  *               $ref: '#/components/schemas/User'
  */
-router.post('/:id/avatar', checkPermission('add_avatar'), authMiddleware, upload.single('avatar'), userController.addAvatarToUser);
+router.post('/:id/avatar', authMiddleware, checkPermission('add_avatar'), upload.single('avatar'), userController.addAvatarToUser);
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ */
+router.get('/', authMiddleware, checkPermission('view_users'), userController.getAllUsers);
 
 export default router;
