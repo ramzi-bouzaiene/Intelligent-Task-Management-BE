@@ -12,5 +12,5 @@ export const MINIO_PORT = parseInt(process.env.MINIO_PORT || '9000', 10);
 export const MINIO_USE_SSL = process.env.MINIO_USE_SSL === 'true';
 export const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY;
 export const MINIO_SECRET_KEY = process.env.MINIO_SECRET_KEY;
-export const MINIO_BUCKET = process.env.MINIO_BUCKET;
-export const MINIO_PUBLIC_URL = process.env.MINIO_PUBLIC_URL;
+export const MINIO_BUCKET = process.env.MINIO_BUCKET || 'avatars';
+export const MINIO_PUBLIC_URL = process.env.MINIO_PUBLIC_URL || '';
