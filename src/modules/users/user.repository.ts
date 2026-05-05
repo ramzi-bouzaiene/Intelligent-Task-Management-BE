@@ -3,7 +3,7 @@ import { User } from '../../database/models/user.model';
 import { CreateUserDto, UserResponseDto } from './user.dto';
 
 export const getAllUsers = async (): Promise<UserResponseDto[]> => {
-  const result = await pool.query('SELECT * FROM users WHERE role != $1', ['developer']);
+  const result = await pool.query('SELECT * FROM users WHERE role = $1', ['developer']);
   return result.rows;
 }
 

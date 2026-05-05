@@ -68,6 +68,78 @@ route.get(
 
 /****************************************
  * @swagger
+ * /api/tasks/kanban:
+ *   get:
+ *     summary: Get kanban board for all tasks
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Kanban columns grouped by task status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 columns:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       status:
+ *                         type: string
+ *                         enum: [pending, in_progress, completed]
+ *                       tasks:
+ *                         type: array
+ *                         items:
+ *                           $ref: '#/components/schemas/Task'
+ */
+route.get(
+  '/kanban',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_kanban_tasks'),
+  taskController.getKanbanBoard,
+);
+
+/****************************************
+ * @swagger
+ * /api/tasks/kanban/mine:
+ *   get:
+ *     summary: Get kanban board for the authenticated user's tasks
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Kanban columns grouped by task status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 columns:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       status:
+ *                         type: string
+ *                         enum: [pending, in_progress, completed]
+ *                       tasks:
+ *                         type: array
+ *                         items:
+ *                           $ref: '#/components/schemas/Task'
+ */
+route.get(
+  '/kanban/mine',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_kanban_tasks'),
+  taskController.getMyKanbanBoard,
+);
+
+/****************************************
+ * @swagger
  * /api/tasks/{id}:
  *   delete:
  *     summary: Delete a task
