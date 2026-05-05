@@ -12,6 +12,7 @@ import {
 } from './task.repository';
 import { CreateTaskDto, UpdateTaskDto, GetTasksQueryDto } from './task.dto';
 import { taskStatus } from '../../shared/constants/taskStatus';
+import { Task } from '../../database/models/task.model';
 
 export const createNewTask = async (data: CreateTaskDto) => {
   const task = await createTask(data);
@@ -81,4 +82,36 @@ export const getTasksByQueryService = async (query: GetTasksQueryDto, userId: nu
     return await getTasksByTitleService(query.title);
   }
   return await getUserTasksService(userId);
+};
+
+const buildKanbanColumns = (tasks: Task[]) => {
+  const columns = [
+    { status: taskStatus.PENDING, tasks: [] as Task[] },
+    { status: taskStatus.IN_PROGRESS, tasks: [] as Task[] },
+    { status: taskStatus.COMPLETED, tasks: [] as Task[] },
+  ];
+
+  const columnsByStatus = new Map(columns.map((column) => [column.status, column]));
+
+  for (const task of tasks) {
+    const column = columnsByStatus.get(task.status);
+    if (column) {
+      column.tasks.push(task);
+    }
+  }
+
+  return { columns };
+};
+
+export const getKanbanBoardService = async (scope: 'all' | 'mine', userId: number) => {
+  if (scope === 'mine') {
+    if (!Number.isFinite(userId)) {
+      throw new Error('User ID is required for personal kanban board');
+    }
+    const tasks = await getTasksByUserId(userId);
+    return buildKanbanColumns(tasks);
+  }
+
+  const tasks = await getAllTasks();
+  return buildKanbanColumns(tasks);
 };

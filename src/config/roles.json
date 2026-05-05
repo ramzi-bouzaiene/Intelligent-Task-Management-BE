@@ -27,7 +27,8 @@
         "read_projects",
         "add_user",
         "add_avatar",
-        "view_users"
+        "view_users",
+        "read_kanban_tasks"
       ]
     },
     {
