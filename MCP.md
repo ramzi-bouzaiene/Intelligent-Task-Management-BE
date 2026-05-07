@@ -1,6 +1,6 @@
-# 📦 AI Agent with Ollama + Postgres MCP (Express + TypeScript)
+# 📦 AI Agent with Google Gemini + Postgres MCP (Express + TypeScript)
 
-This project demonstrates how to connect an Ollama LLM (local AI model) with a PostgreSQL MCP server using an Express + TypeScript backend.
+This project demonstrates how to connect a Google Gemini LLM (hosted API model) with a PostgreSQL MCP server using an Express + TypeScript backend.
 
 It enables the AI to:
 - Understand user requests
@@ -17,7 +17,7 @@ User
   ↓
 Express API (TypeScript)
   ↓
-Ollama Model (LLM)
+Google Gemini API (LLM)
   ↓ (tool decision)
 AI Agent Layer (your backend logic)
   ↓
@@ -55,7 +55,7 @@ In this project:
 Show me all tasks created today
 ```
 
-### 2. Ollama decides tool usage
+### 2. Google Gemini decides tool usage
 
 The model may output:
 
@@ -87,7 +87,7 @@ MCP communicates with PostgreSQL using a safe execution layer.
 
 ### 5. Final response from LLM
 
-The result is sent back to Ollama to generate a human-readable answer.
+The result is sent back to Google Gemini to generate a human-readable answer.
 
 ---
 
@@ -121,7 +121,7 @@ docker run -p 8000:8000 \
 
 - Node.js + Express
 - TypeScript
-- Ollama (local LLM)
+- Google Gemini (hosted LLM)
 - Postgres MCP Server
 - PostgreSQL
 - MCP Protocol (SSE/stdio)
@@ -143,7 +143,7 @@ docker run -p 8000:8000 \
 ```
 src/
  ├── services/
- │    ├── ai.service.ts        # Ollama integration
+ │    ├── ai.service.ts        # Google Gemini integration
  │    ├── mcpClient.ts         # MCP communication layer
  │
  ├── mcp/
@@ -158,11 +158,11 @@ src/
 ## ⚡ Example AI Service Flow
 
 ```
-ollama.chat()
+gemini generateContent
   → detect tool_calls
   → call MCP client
   → execute SQL
-  → send result back to Ollama
+  → send result back to Google Gemini
   → return final answer
 ```
 
@@ -181,7 +181,7 @@ ollama.chat()
 - AI can use real database data
 - No need to hardcode business logic
 - Extensible (add Redis, Git, APIs via MCP)
-- Works fully locally (Ollama + MCP)
+- Works with Google Gemini + MCP
 
 ---
 
