@@ -1,4 +1,4 @@
-# 📦 AI Agent with Google Gemini + Postgres MCP (Express + TypeScript)
+# AI Agent with Google Gemini + Postgres MCP (Express + TypeScript)
 
 This project demonstrates how to connect a Google Gemini LLM (hosted API model) with a PostgreSQL MCP server using an Express + TypeScript backend.
 
@@ -10,7 +10,7 @@ It enables the AI to:
 
 ---
 
-## 🧠 Architecture Overview
+## Architecture Overview
 
 ```
 User
@@ -30,7 +30,7 @@ PostgreSQL Database
 
 ---
 
-## ⚙️ What is MCP?
+## What is MCP?
 
 Model Context Protocol (MCP) is a standard that allows AI models to use external tools.
 
@@ -46,7 +46,7 @@ In this project:
 
 ---
 
-## 🚀 How it works
+## How it works
 
 ### 1. User asks a question
 
@@ -91,7 +91,7 @@ The result is sent back to Google Gemini to generate a human-readable answer.
 
 ---
 
-## 🔌 MCP Server Setup
+## MCP Server Setup
 
 ### Run with Docker
 
@@ -102,22 +102,22 @@ docker run -p 8000:8000 \
   --access-mode=unrestricted --transport=sse
 ```
 
-👉 This exposes MCP at: `http://localhost:8000/sse`
+This exposes MCP at: `http://localhost:8000/sse`
 
 ---
 
-## 🧩 Key Endpoints
+## Key Endpoints
 
 | Endpoint | Description |
 |----------|-------------|
 | `/sse`   | MCP streaming connection (recommended) |
 | `/mcp`   | MCP HTTP transport (depends on setup) |
 
-> 👉 MCP uses a protocol layer, not REST APIs.
+> MCP uses a protocol layer, not REST APIs.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - Node.js + Express
 - TypeScript
@@ -128,9 +128,9 @@ docker run -p 8000:8000 \
 
 ---
 
-## 🧠 Important Concepts
+## Important Concepts
 
-| ❌ What it's NOT | ✅ What it IS |
+| What it's NOT | What it IS |
 |-----------------|--------------|
 | The model does NOT directly access the database | LLM decides |
 | MCP is NOT a REST API | Backend executes |
@@ -138,7 +138,7 @@ docker run -p 8000:8000 \
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -155,7 +155,7 @@ src/
 
 ---
 
-## ⚡ Example AI Service Flow
+## Example AI Service Flow
 
 ```
 gemini generateContent
@@ -168,7 +168,7 @@ gemini generateContent
 
 ---
 
-## 🔐 Security Notes
+## Security Notes
 
 - Prefer `--access-mode=restricted` in production
 - Avoid exposing `/mcp` publicly without auth
@@ -176,7 +176,7 @@ gemini generateContent
 
 ---
 
-## 🚀 Why This Architecture is Powerful
+## Why This Architecture is Powerful
 
 - AI can use real database data
 - No need to hardcode business logic
@@ -184,13 +184,3 @@ gemini generateContent
 - Works with Google Gemini + MCP
 
 ---
-
-## 📌 Next Improvements
-
-You can extend this system with:
-
-- LangGraph agent loop (multi-step reasoning)
-- Tool routing system (DB + filesystem + APIs)
-- Streaming responses
-- Query caching layer
-- RAG + MCP hybrid system
