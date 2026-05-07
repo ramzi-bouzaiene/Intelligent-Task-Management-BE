@@ -151,4 +151,3 @@ src/
 ## Docs
 
 - MCP integration details: see MCP.md
-- Class diagram: see CLASS_DIAGRAM.md
