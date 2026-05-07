@@ -37,7 +37,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
     container_name: intelligent-tm-backend
     restart: unless-stopped
     ports:
@@ -52,9 +52,18 @@ services:
       DB_NAME: intelligent-tm
       DATABASE_URL: postgresql://postgres:ramzi@postgres:5432/intelligent-tm?sslmode=disable
       PGSSLMODE: disable
-      MCP_URL: http://postgres-mcp:8002
+      MCP_URL: http://postgres-mcp:8000
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_USE_SSL: "false"
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: avatars
+      MINIO_PUBLIC_URL: http://localhost:9000
       JWT_SECRET: ${JWT_SECRET}
-      MODEL_NAME: ${MODEL_NAME}
+      GEMINI_MODEL: ${GEMINI_MODEL}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_BASE_URL: ${GEMINI_BASE_URL}
     depends_on:
       postgres:
         condition: service_healthy

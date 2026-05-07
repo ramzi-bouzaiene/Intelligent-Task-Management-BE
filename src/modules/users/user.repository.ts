@@ -1,5 +1,4 @@
 import { pool } from '../../config/database';
-import { User } from '../../database/models/user.model';
 import { CreateUserDto, UserResponseDto } from './user.dto';
 
 export const getAllUsers = async (): Promise<UserResponseDto[]> => {

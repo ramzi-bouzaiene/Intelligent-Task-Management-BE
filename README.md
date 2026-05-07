@@ -1,12 +1,12 @@
 # Intelligent Task Manager
 
-An intelligent task management backend built with Node.js, Express, TypeScript, PostgreSQL, and Minio. It exposes REST APIs for auth, tasks, projects, and users, plus an AI assistant powered by Ollama that can query the database through Postgres MCP.
+An intelligent task management backend built with Node.js, Express, TypeScript, PostgreSQL, and Minio. It exposes REST APIs for auth, tasks, projects, and users, plus an AI assistant powered by Google Gemini that can query the database through Postgres MCP.
 
 ## Highlights
 
 - JWT-based authentication and role-aware access.
 - Tasks, projects, and users modules with clean separation.
-- AI chatbot endpoint that uses Ollama + Postgres MCP for data-aware answers.
+- AI chatbot endpoint that uses Google Gemini + Postgres MCP for data-aware answers.
 - Minio-backed avatar uploads and bucket management.
 - Swagger API docs at `/api/docs`.
 - SQL migrations and a seed script for local data.
@@ -16,7 +16,7 @@ An intelligent task management backend built with Node.js, Express, TypeScript, 
 - Node.js + Express
 - TypeScript
 - PostgreSQL
-- Ollama (local LLM)
+- Google Gemini (hosted LLM)
 - Postgres MCP (tooling bridge)
 - Minio (object storage)
 - Swagger, Zod, Winston
@@ -28,7 +28,7 @@ An intelligent task management backend built with Node.js, Express, TypeScript, 
 - Node.js 18+
 - PostgreSQL 16+
 - Minio server (or Docker)
-- Ollama (for AI features)
+- Google Gemini API key (for AI features)
 
 ### Install
 
@@ -45,7 +45,9 @@ PORT=5000
 DATABASE_URL=postgres://user:password@localhost:5432/yourdb
 JWT_SECRET=your_jwt_secret
 
-MODEL_NAME=llama3.2
+GEMINI_MODEL=gemini-flash-latest
+GEMINI_API_KEY=your_gemini_key
+GEMINI_BASE_URL=https://generativelanguage.googleapis.com/v1beta
 MCP_URL=http://localhost:8001
 
 MINIO_ENDPOINT=localhost
@@ -56,8 +58,6 @@ MINIO_SECRET_KEY=minioadmin
 MINIO_BUCKET=avatars
 MINIO_PUBLIC_URL=http://localhost:9000
 
-# Optional / future use
-DEEPSEEK_API_KEY=
 ```
 
 ### Run Migrations and Start the API
@@ -85,7 +85,7 @@ This repository includes `docker-compose.yml` with PostgreSQL, Postgres MCP, Min
 docker compose up --build
 ```
 
-Set the environment variables used by the compose file (at minimum `JWT_SECRET` and `MODEL_NAME`) in a local `.env`. If you run the API outside Docker, keep `MINIO_ENDPOINT=localhost`; inside Docker, set `MINIO_ENDPOINT=minio` and `MCP_URL=http://postgres-mcp:8002`.
+Set the environment variables used by the compose file (at minimum `JWT_SECRET`, `GEMINI_MODEL`, and `GEMINI_API_KEY`) in a local `.env`. If you run the API outside Docker, keep `MINIO_ENDPOINT=localhost`; inside Docker, set `MINIO_ENDPOINT=minio` and `MCP_URL=http://postgres-mcp:8002`.
 
 ## Environment Variable Reference
 
@@ -94,7 +94,9 @@ Set the environment variables used by the compose file (at minimum `JWT_SECRET` 
 | PORT | No | 5000 | API port |
 | DATABASE_URL | Yes | - | PostgreSQL connection string |
 | JWT_SECRET | Yes | - | Used to sign auth tokens |
-| MODEL_NAME | No | llama3.2 | Ollama model name |
+| GEMINI_MODEL | No | gemini-flash-latest | Gemini model name |
+| GEMINI_API_KEY | Yes (for AI) | - | Gemini API key |
+| GEMINI_BASE_URL | No | https://generativelanguage.googleapis.com/v1beta | Gemini API base URL |
 | MCP_URL | No | http://localhost:8001 | Postgres MCP SSE base URL |
 | MINIO_ENDPOINT | Yes | - | Hostname for Minio |
 | MINIO_PORT | No | 9000 | Minio port |
@@ -103,7 +105,6 @@ Set the environment variables used by the compose file (at minimum `JWT_SECRET` 
 | MINIO_SECRET_KEY | Yes | - | Minio secret key |
 | MINIO_BUCKET | No | avatars | Bucket for user avatars |
 | MINIO_PUBLIC_URL | No | - | Public base URL for object links |
-| DEEPSEEK_API_KEY | No | - | Reserved for future provider |
 
 ## Scripts
 
