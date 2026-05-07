@@ -6,9 +6,9 @@ services:
     container_name: intelligent-tm-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ramzi
-      POSTGRES_DB: intelligent-tm
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-intelligent-tm}
     ports:
       - "5432:5432"
     volumes:
@@ -25,7 +25,7 @@ services:
     container_name: intelligent-tm-mcp
     restart: unless-stopped
     environment:
-      DATABASE_URI: postgresql://postgres:ramzi@postgres:5432/intelligent-tm
+      DATABASE_URI: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-intelligent-tm}
     ports:
       - "8002:8000"
     command: ["--access-mode=unrestricted", "--transport=sse"]
@@ -47,19 +47,19 @@ services:
       PORT: 5000
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: ramzi
-      DB_NAME: intelligent-tm
-      DATABASE_URL: postgresql://postgres:ramzi@postgres:5432/intelligent-tm?sslmode=disable
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB:-intelligent-tm}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-intelligent-tm}?sslmode=disable
       PGSSLMODE: disable
       MCP_URL: http://postgres-mcp:8000
       MINIO_ENDPOINT: minio
       MINIO_PORT: 9000
       MINIO_USE_SSL: "false"
-      MINIO_ACCESS_KEY: minioadmin
-      MINIO_SECRET_KEY: minioadmin
-      MINIO_BUCKET: avatars
-      MINIO_PUBLIC_URL: http://localhost:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET:-avatars}
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:-http://localhost:9000}
       JWT_SECRET: ${JWT_SECRET}
       GEMINI_MODEL: ${GEMINI_MODEL}
       GEMINI_API_KEY: ${GEMINI_API_KEY}
@@ -81,8 +81,8 @@ services:
       - "9000:9000"
       - "9001:9001"
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
