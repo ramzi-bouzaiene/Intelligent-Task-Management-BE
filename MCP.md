@@ -42,7 +42,7 @@ In this project:
   - Query analysis
   - Performance insights
 
-👉 **Source MCP server:** [crystaldba/postgres-mcp](https://github.com/crystaldba/postgres-mcp)
+**Source MCP server:** [crystaldba/postgres-mcp](https://github.com/crystaldba/postgres-mcp)
 
 ---
 
@@ -182,5 +182,3 @@ gemini generateContent
 - No need to hardcode business logic
 - Extensible (add Redis, Git, APIs via MCP)
 - Works with Google Gemini + MCP
-
----
