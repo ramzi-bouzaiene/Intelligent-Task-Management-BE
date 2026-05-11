@@ -45,19 +45,31 @@ router.post(
  * @swagger
  * /api/projects:
  *   get:
- *     summary: Get all projects
+ *     summary: Get projects (paginated)
  *     tags: [Projects]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           example: 10
  *     responses:
  *       200:
- *         description: A list of projects
+ *         description: A paginated list of projects
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Project'
+ *               $ref: '#/components/schemas/PaginatedProjects'
  */
 router.get(
   '/',
@@ -256,24 +268,41 @@ router.get(
 
 /**
  * @swagger
- * /api/projects/project-by-members:
+ * /api/projects/project-by-members/{memberId}:
  *   get:
- *     summary: Get projects with members by user
+ *     summary: Get projects with members by user (paginated)
  *     tags: [Projects]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           example: 10
  *     responses:
  *       200:
- *         description: A list of projects with members
+ *         description: A paginated list of projects with members
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Project'
+ *               $ref: '#/components/schemas/PaginatedProjectsWithMembers'
  */
 router.get(
-  '/project-by-members',
+  '/project-by-members/:memberId',
   authMiddleware,
   rbacMiddleware.checkPermission('read_own_projects'),
   projectController.getProjectsWithMembersByUser

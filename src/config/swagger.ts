@@ -119,6 +119,59 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
+        ProjectMember: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'Ramzi' },
+          },
+        },
+        ProjectWithMembers: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'Project Alpha' },
+            created_at: {
+              type: 'string',
+              format: 'date-time',
+            },
+            members: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/ProjectMember' },
+            },
+          },
+        },
+        PaginationMeta: {
+          type: 'object',
+          properties: {
+            page: { type: 'number', example: 1 },
+            limit: { type: 'number', example: 10 },
+            total: { type: 'number', example: 42 },
+            totalPages: { type: 'number', example: 5 },
+            hasNextPage: { type: 'boolean', example: true },
+            hasPrevPage: { type: 'boolean', example: false },
+          },
+        },
+        PaginatedProjects: {
+          type: 'object',
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/Project' },
+            },
+            pagination: { $ref: '#/components/schemas/PaginationMeta' },
+          },
+        },
+        PaginatedProjectsWithMembers: {
+          type: 'object',
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/ProjectWithMembers' },
+            },
+            pagination: { $ref: '#/components/schemas/PaginationMeta' },
+          },
+        },
         CreateProjectInput: {
           type: 'object',
           required: ['name', 'description'],
