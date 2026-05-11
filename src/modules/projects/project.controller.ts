@@ -9,7 +9,12 @@ export const createProject = async (req: Request, res: Response) => {
 
 export const getProjects = async (req: Request, res: Response) => {
   const userId = (req as any).user.id;
-  const projects = await projectService.getProjectsByUser(userId);
+  const pageParam = Array.isArray(req.query.page) ? req.query.page[0] : req.query.page;
+  const limitParam = Array.isArray(req.query.limit) ? req.query.limit[0] : req.query.limit;
+  const projects = await projectService.getProjectsByUser(userId, {
+    page: pageParam ? Number(pageParam) : undefined,
+    limit: limitParam ? Number(limitParam) : undefined,
+  });
   res.json(projects);
 };
 
@@ -63,6 +68,11 @@ export const getProjectWithMembers = async (req: Request, res: Response) => {
 
 export const getProjectsWithMembersByUser = async (req: Request, res: Response) => {
   const userId = (req as any).user.id;
-  const projects = await projectService.getProjectsWithMembersByUser(userId);
+  const pageParam = Array.isArray(req.query.page) ? req.query.page[0] : req.query.page;
+  const limitParam = Array.isArray(req.query.limit) ? req.query.limit[0] : req.query.limit;
+  const projects = await projectService.getProjectsWithMembersByUser(userId, {
+    page: pageParam ? Number(pageParam) : undefined,
+    limit: limitParam ? Number(limitParam) : undefined,
+  });
   res.json(projects);
 };

@@ -9,9 +9,26 @@ export const createProject = async (project: Project): Promise<Project> => {
   return result.rows[0];
 };
 
-export const getProjectsByUser = async (userId: number): Promise<Project[]> => {
-  const result = await pool.query('SELECT * FROM projects WHERE user_id = $1', [userId]);
-  return result.rows;
+export const getProjectsByUser = async (
+  userId: number,
+  limit: number,
+  offset: number,
+): Promise<{ rows: Project[]; total: number }> => {
+  const [dataResult, countResult] = await Promise.all([
+    pool.query(
+      `
+      SELECT * FROM projects
+      WHERE user_id = $1
+      ORDER BY created_at DESC, id DESC
+      LIMIT $2 OFFSET $3
+      `,
+      [userId, limit, offset],
+    ),
+    pool.query('SELECT COUNT(*)::int AS total FROM projects WHERE user_id = $1', [userId]),
+  ]);
+
+  const total = Number(countResult.rows[0]?.total ?? 0);
+  return { rows: dataResult.rows, total };
 };
 
 export const getProjectById = async (id: number): Promise<Project | null> => {
@@ -91,30 +108,48 @@ export const getProjectWithMembers = async (projectId: number) => {
   return result.rows[0];
 };
 
-export const getProjectsWithMembersByUser = async (userId: number) => {
-  const result = await pool.query(
-    `
-    SELECT
-      p.id,
-      p.name,
-      p.created_at,
-      COALESCE(
-        JSON_AGG(
-          JSON_BUILD_OBJECT(
-            'id', u.id,
-            'name', u.name
-          )
-        ) FILTER (WHERE u.id IS NOT NULL),
-        '[]'
-      ) AS members
-    FROM projects p
-    LEFT JOIN project_members pm ON pm.project_id = p.id
-    LEFT JOIN users u ON u.id = pm.user_id
-    WHERE p.user_id = $1 OR pm.user_id = $1
-    GROUP BY p.id
-    `,
-    [userId]
-  );
+export const getProjectsWithMembersByUser = async (
+  userId: number,
+  limit: number,
+  offset: number,
+): Promise<{ rows: Array<Record<string, unknown>>; total: number }> => {
+  const [dataResult, countResult] = await Promise.all([
+    pool.query(
+      `
+      SELECT
+        p.id,
+        p.name,
+        p.created_at,
+        COALESCE(
+          JSON_AGG(
+            JSON_BUILD_OBJECT(
+              'id', u.id,
+              'name', u.name
+            )
+          ) FILTER (WHERE u.id IS NOT NULL),
+          '[]'
+        ) AS members
+      FROM projects p
+      LEFT JOIN project_members pm ON pm.project_id = p.id
+      LEFT JOIN users u ON u.id = pm.user_id
+      WHERE p.user_id = $1 OR pm.user_id = $1
+      GROUP BY p.id
+      ORDER BY p.created_at DESC, p.id DESC
+      LIMIT $2 OFFSET $3
+      `,
+      [userId, limit, offset],
+    ),
+    pool.query(
+      `
+      SELECT COUNT(DISTINCT p.id)::int AS total
+      FROM projects p
+      LEFT JOIN project_members pm ON pm.project_id = p.id
+      WHERE p.user_id = $1 OR pm.user_id = $1
+      `,
+      [userId],
+    ),
+  ]);
 
-  return result.rows;
-}
+  const total = Number(countResult.rows[0]?.total ?? 0);
+  return { rows: dataResult.rows, total };
+};
