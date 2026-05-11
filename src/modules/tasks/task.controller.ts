@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import * as taskService from './task.service';
 import { createTaskSchema, updateTaskSchema } from './task.dto';
-import { taskStatus } from '../../shared/constants/taskStatus';
 
 export const createTask = async (req: Request, res: Response) => {
   const data = createTaskSchema.parse(req.body);
@@ -73,3 +72,9 @@ export const getMyKanbanBoard = async (req: Request, res: Response) => {
     const tasks = await taskService.getTasksByStatusService(status);
     res.json(tasks);
 } */
+
+export const getTasksByProjectId = async (req: Request, res: Response) => {
+  const projectId = Number(req.params.projectId);
+  const tasks = await taskService.getTasksByProjectIdService(projectId);
+  res.json(tasks);
+};

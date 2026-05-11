@@ -34,7 +34,6 @@
     {
       "name": "developer",
       "permissions": [
-        "read_project",
         "read_own_task",
         "update_task_status",
         "create_comment",
@@ -43,7 +42,8 @@
         "delete_comment",
         "read_notification",
         "read_projects",
-        "add_avatar"
+        "add_avatar",
+        "read_own_projects"
       ]
     },
     {

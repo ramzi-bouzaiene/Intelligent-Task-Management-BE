@@ -111,3 +111,11 @@ export const getTasksByTitle = async (title: string): Promise<Task[]> => {
   const result = await pool.query(query, [`%${title}%`]);
   return result.rows;
 };
+
+export const getTasksByProjectId = async (projectId: number): Promise<Task[]> => {
+  const query = `
+    SELECT * FROM tasks WHERE project_id = $1;
+    `;
+  const result = await pool.query(query, [projectId]);
+  return result.rows;
+};

@@ -33,3 +33,7 @@ export const removeMemberFromProject = async (projectId: number, userId: number)
 export const getProjectWithMembers = async (projectId: number) => {
   return projectRepo.getProjectWithMembers(projectId);
 };
+
+export const getProjectsWithMembersByUser = async (userId: number) => {
+  return projectRepo.getProjectsWithMembersByUser(userId);
+};

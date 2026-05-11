@@ -90,3 +90,31 @@ export const getProjectWithMembers = async (projectId: number) => {
 
   return result.rows[0];
 };
+
+export const getProjectsWithMembersByUser = async (userId: number) => {
+  const result = await pool.query(
+    `
+    SELECT
+      p.id,
+      p.name,
+      p.created_at,
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'id', u.id,
+            'name', u.name
+          )
+        ) FILTER (WHERE u.id IS NOT NULL),
+        '[]'
+      ) AS members
+    FROM projects p
+    LEFT JOIN project_members pm ON pm.project_id = p.id
+    LEFT JOIN users u ON u.id = pm.user_id
+    WHERE p.user_id = $1 OR pm.user_id = $1
+    GROUP BY p.id
+    `,
+    [userId]
+  );
+
+  return result.rows;
+}

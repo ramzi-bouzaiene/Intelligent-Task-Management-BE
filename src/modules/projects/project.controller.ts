@@ -60,3 +60,9 @@ export const getProjectWithMembers = async (req: Request, res: Response) => {
   if (!project) return res.status(404).json({ message: 'Project not found' });
   res.json(project);
 };
+
+export const getProjectsWithMembersByUser = async (req: Request, res: Response) => {
+  const userId = (req as any).user.id;
+  const projects = await projectService.getProjectsWithMembersByUser(userId);
+  res.json(projects);
+};
