@@ -294,4 +294,36 @@ route.get(
   taskController.getUserTasks,
 );
 
+/****************************************
+ * @swagger
+ * /api/tasks/projects/{projectId}:
+ *   get:
+ *     summary: Get all tasks for a specific project
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: List of tasks for the project
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ */
+route.get(
+  '/projects/:projectId',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_tasks'),
+  taskController.getTasksByProjectId,
+);
+
 export default route;

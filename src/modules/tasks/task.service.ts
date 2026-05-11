@@ -9,6 +9,7 @@ import {
   getTasksByStatus,
   getTasksByUserIdAndStatus,
   getTasksByTitle,
+  getTasksByProjectId,
 } from './task.repository';
 import { CreateTaskDto, UpdateTaskDto, GetTasksQueryDto } from './task.dto';
 import { taskStatus } from '../../shared/constants/taskStatus';
@@ -114,4 +115,9 @@ export const getKanbanBoardService = async (scope: 'all' | 'mine', userId: numbe
 
   const tasks = await getAllTasks();
   return buildKanbanColumns(tasks);
+};
+
+export const getTasksByProjectIdService = async (projectId: number) => {
+  const tasks = await getTasksByProjectId(projectId);
+  return tasks;
 };

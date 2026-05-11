@@ -200,6 +200,12 @@ router.post(
  *         schema:
  *           type: string
  *         required: true
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
  *     requestBody:
  *       required: true
  *       content:
@@ -211,7 +217,7 @@ router.post(
  *         description: Member removed from project successfully
  */
 router.delete(
-  '/:id/members',
+  '/:id/members/:userId',
   authMiddleware,
   rbacMiddleware.checkPermission('remove_member_from_project'),
   projectController.removeMemberFromProject,
@@ -246,6 +252,31 @@ router.get(
   authMiddleware,
   rbacMiddleware.checkPermission('read_project_members'),
   projectController.getProjectWithMembers,
+);
+
+/**
+ * @swagger
+ * /api/projects/project-by-members:
+ *   get:
+ *     summary: Get projects with members by user
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of projects with members
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Project'
+ */
+router.get(
+  '/project-by-members',
+  authMiddleware,
+  rbacMiddleware.checkPermission('read_own_projects'),
+  projectController.getProjectsWithMembersByUser
 );
 
 export default router;

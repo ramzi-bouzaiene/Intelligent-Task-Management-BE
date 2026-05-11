@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { taskStatus } from '../../shared/constants/taskStatus';
+import { taskSeverity } from '../../shared/constants/taskSeverity';
 
 export const createTaskSchema = z.object({
   title: z.string().min(1),
@@ -9,6 +10,9 @@ export const createTaskSchema = z.object({
     .default(taskStatus.PENDING),
   user_id: z.number().optional(),
   project_id: z.number(),
+  severity: z
+    .enum([taskSeverity.LOW, taskSeverity.MEDIUM, taskSeverity.HIGH, taskSeverity.URGENT])
+    .default(taskSeverity.LOW),
   created_at: z.date().default(() => new Date()),
 });
 
@@ -17,6 +21,9 @@ export const updateTaskSchema = z.object({
   description: z.string().optional(),
   status: z.enum([taskStatus.PENDING, taskStatus.IN_PROGRESS, taskStatus.COMPLETED]).optional(),
   project_id: z.number().optional(),
+  severity: z
+    .enum([taskSeverity.LOW, taskSeverity.MEDIUM, taskSeverity.HIGH, taskSeverity.URGENT])
+    .default(taskSeverity.LOW),
   updated_at: z.date().default(() => new Date()),
 });
 
