@@ -99,6 +99,23 @@ const options: swaggerJsdoc.Options = {
             response: { type: 'string', example: 'The capital of Tunisia is Tunis.' },
           },
         },
+        GenerateProjectDescriptionRequest: {
+          type: 'object',
+          required: ['projectName'],
+          properties: {
+            projectName: { type: 'string', example: 'Project Alpha' },
+          },
+        },
+        GenerateProjectDescriptionResponse: {
+          type: 'object',
+          properties: {
+            description: {
+              type: 'string',
+              example:
+                'Project Alpha is a task management initiative focused on improving release coordination and sprint planning.',
+            },
+          },
+        },
         Project: {
           type: 'object',
           properties: {

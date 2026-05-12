@@ -6,6 +6,7 @@ import authRoutes from './modules/auth/auth.routes';
 import { errorHandler } from './middleware/error.middleware';
 import taskRoutes from './modules/tasks/task.routes';
 import chatbotRoutes from './modules/chatbot/chatbot.routes';
+import aiRoutes from './modules/ai/ai.route';
 import projectRoutes from './modules/projects/project.routes';
 import bucketRoutes from './modules/storage/bucket.routes';
 import userRoutes from './modules/users/user.routes';
@@ -23,6 +24,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
 app.use('/api', chatbotRoutes);
+
+app.use('/api', aiRoutes);
 
 app.use('/api/projects', projectRoutes);
 

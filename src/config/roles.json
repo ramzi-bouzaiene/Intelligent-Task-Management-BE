@@ -28,7 +28,8 @@
         "add_user",
         "add_avatar",
         "view_users",
-        "read_kanban_tasks"
+        "read_kanban_tasks",
+        "generate_project_description"
       ]
     },
     {
