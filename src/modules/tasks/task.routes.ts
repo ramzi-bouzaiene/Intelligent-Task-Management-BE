@@ -160,7 +160,7 @@ route.get(
  *         description: Task not found
  */
 route.delete(
-  '/:id',
+  '/:taskId',
   authMiddleware,
   rbacMiddleware.checkPermission('delete_task'),
   taskController.deleteTask,
@@ -168,7 +168,7 @@ route.delete(
 
 /****************************************
  * @swagger
- * /api/tasks/{id}:
+ * /api/tasks/{taskId}:
  *   get:
  *     summary: Get task details
  *     tags: [Tasks]
@@ -176,7 +176,7 @@ route.delete(
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: taskId
  *         schema:
  *           type: integer
  *         required: true
@@ -192,7 +192,7 @@ route.delete(
  *         description: Task not found
  */
 route.get(
-  '/:id',
+  '/:taskId',
   authMiddleware,
   rbacMiddleware.checkPermission('read_task'),
   taskController.getTaskDetails,
@@ -200,7 +200,7 @@ route.get(
 
 /****************************************
  * @swagger
- * /api/tasks/{id}/status:
+ * /api/tasks/{taskId}/status:
  *   patch:
  *     summary: Change task status
  *     tags: [Tasks]
@@ -208,7 +208,7 @@ route.get(
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: taskId
  *         schema:
  *           type: integer
  *         required: true
@@ -234,7 +234,7 @@ route.get(
  *         description: Task not found
  */
 route.patch(
-  '/:id/status',
+  '/:taskId/status',
   authMiddleware,
   rbacMiddleware.checkPermission('update_task_status'),
   taskController.changeTaskStatus,
@@ -324,6 +324,44 @@ route.get(
   authMiddleware,
   rbacMiddleware.checkPermission('read_tasks'),
   taskController.getTasksByProjectId,
+);
+
+/****************************************
+ * @swagger
+ * /api/tasks/{taskId}:
+ *   put:
+ *     summary: Update a task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Task ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Task'
+ *     responses:
+ *       200:
+ *         description: Task updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ *       404:
+ *         description: Task not found
+ */
+route.put(
+  '/:taskId',
+  authMiddleware,
+  rbacMiddleware.checkPermission('update_task'),
+  taskController.updateTask,
 );
 
 export default route;

@@ -4,11 +4,11 @@ import { taskStatus } from '../../shared/constants/taskStatus';
 
 export const createTask = async (task: Task): Promise<Task> => {
   const query = `
-    INSERT INTO tasks (title, description, status, user_id, project_id)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO tasks (title, description, status, user_id, project_id, severity)
+    VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING *;
     `;
-  const values = [task.title, task.description, task.status, task.user_id, task.project_id];
+  const values = [task.title, task.description, task.status, task.user_id, task.project_id, task.severity];
   const result = await pool.query(query, values);
   return result.rows[0];
 };
