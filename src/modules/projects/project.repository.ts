@@ -52,7 +52,7 @@ export const deleteProject = async (id: number): Promise<void> => {
 };
 
 export const addMemberToProject = async (projectId: number, userIds: number[]): Promise<void> => {
-   await pool.query(
+  await pool.query(
     `
     INSERT INTO project_members (project_id, user_id)
     SELECT $1, UNNEST($2::int[])
@@ -152,4 +152,20 @@ export const getProjectsWithMembersByUser = async (
 
   const total = Number(countResult.rows[0]?.total ?? 0);
   return { rows: dataResult.rows, total };
+};
+
+export const getProjectsByIds = async (projectIds: number[]): Promise<Project[]> => {
+  const result = await pool.query(
+    `SELECT
+        p.id,
+        p.name,
+        p.description,
+        u.name AS user_name
+     FROM projects p
+     LEFT JOIN users u ON u.id = p.user_id
+     WHERE p.id = ANY($1::int[])`,
+    [projectIds]
+  );
+
+  return result.rows;
 };

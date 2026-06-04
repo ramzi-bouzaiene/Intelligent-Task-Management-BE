@@ -36,7 +36,7 @@ export const deleteProject = async (req: Request, res: Response) => {
 };
 
 export const addMemberToProject = async (req: Request, res: Response) => {
-   try {
+  try {
     const projectId = Number(req.params.id);
     const { userIds } = req.body;
 
@@ -75,4 +75,18 @@ export const getProjectsWithMembersByUser = async (req: Request, res: Response) 
     limit: limitParam ? Number(limitParam) : undefined,
   });
   res.json(projects);
+};
+export const getProjectPdfReport = async (req: Request, res: Response) => {
+  const projectIdsParam = req.query.projectIds;
+
+  const projectIds =
+    typeof projectIdsParam === 'string'
+      ? projectIdsParam.split(',').map(Number)
+      : [];
+
+  const pdfBuffer = await projectService.getProjectPdfReport(projectIds);
+
+  res.set('Content-Type', 'application/pdf');
+  res.set('Content-Disposition', 'attachment; filename="projects.pdf"');
+  res.send(pdfBuffer);
 };
