@@ -29,7 +29,8 @@
         "add_avatar",
         "view_users",
         "read_kanban_tasks",
-        "generate_project_description"
+        "generate_project_description",
+        "view_dashboard"
       ]
     },
     {
@@ -44,13 +45,16 @@
         "read_notification",
         "read_projects",
         "add_avatar",
-        "read_own_projects"
+        "read_own_projects",
+        "read_kanban_tasks",
+        "view_dashboard"
       ]
     },
     {
       "name": "user",
       "permissions": [
-        "read_own_task"
+        "read_own_task",
+        "view_dashboard"
       ]
     }
   ]
