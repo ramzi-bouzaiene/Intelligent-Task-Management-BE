@@ -10,6 +10,7 @@ import aiRoutes from './modules/ai/ai.route';
 import projectRoutes from './modules/projects/project.routes';
 import bucketRoutes from './modules/storage/bucket.routes';
 import userRoutes from './modules/users/user.routes';
+import dashboardRoutes from './modules/dashboard/dashboard.routes';
 
 const app = express();
 
@@ -32,6 +33,8 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/users', userRoutes);
 
 app.use('/api/buckets', bucketRoutes);
+
+app.use('/api/dashboard', dashboardRoutes);
 
 app.use(errorHandler);
 
