@@ -16,9 +16,30 @@ export const createProject = async (userId: number, dto: CreateProjectDto): Prom
 export const getProjectsByUser = async (
   userId: number,
   pagination: PaginationParams = {},
-): Promise<PaginatedResponse<Project>> => {
-  const { page, limit, offset } = getPagination(pagination.page, pagination.limit);
-  const { rows, total } = await projectRepo.getProjectsByUser(userId, limit, offset);
+) => {
+  const hasPagination =
+    pagination.page !== undefined &&
+    pagination.limit !== undefined;
+
+  if (!hasPagination) {
+    const { rows } = await projectRepo.getProjectsByUser(userId);
+
+    return {
+      data: rows,
+    };
+  }
+
+  const { page, limit, offset } = getPagination(
+    pagination.page,
+    pagination.limit,
+  );
+
+  const { rows, total } = await projectRepo.getProjectsByUser(
+    userId,
+    limit,
+    offset,
+  );
+
   return buildPaginatedResponse(rows, total, page, limit);
 };
 

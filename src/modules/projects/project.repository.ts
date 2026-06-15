@@ -11,24 +11,61 @@ export const createProject = async (project: Project): Promise<Project> => {
 
 export const getProjectsByUser = async (
   userId: number,
-  limit: number,
-  offset: number,
+  limit?: number,
+  offset?: number,
 ): Promise<{ rows: Project[]; total: number }> => {
+  const hasPagination =
+    limit !== undefined &&
+    offset !== undefined;
+
+  const whereClause = `
+    p.user_id = $1
+    OR EXISTS (
+      SELECT 1
+      FROM project_members pm
+      WHERE pm.project_id = p.id
+        AND pm.user_id = $1
+    )
+  `;
+
+  const params: number[] = [userId];
+
+  let paginationClause = '';
+
+  if (hasPagination) {
+    params.push(limit, offset);
+
+    paginationClause = `
+      LIMIT $2
+      OFFSET $3
+    `;
+  }
+
   const [dataResult, countResult] = await Promise.all([
     pool.query(
       `
-      SELECT * FROM projects
-      WHERE user_id = $1
-      ORDER BY created_at DESC, id DESC
-      LIMIT $2 OFFSET $3
+      SELECT p.*
+      FROM projects p
+      WHERE ${whereClause}
+      ORDER BY p.created_at DESC, p.id DESC
+      ${paginationClause}
       `,
-      [userId, limit, offset],
+      params,
     ),
-    pool.query('SELECT COUNT(*)::int AS total FROM projects WHERE user_id = $1', [userId]),
+    pool.query(
+      `
+      SELECT COUNT(*)::int AS total
+      FROM projects p
+      WHERE ${whereClause}
+      `,
+      [userId],
+    ),
   ]);
 
-  const total = Number(countResult.rows[0]?.total ?? 0);
-  return { rows: dataResult.rows, total };
+  return {
+    rows: dataResult.rows,
+    total: countResult.rows[0].total,
+  };
 };
 
 export const getProjectById = async (id: number): Promise<Project | null> => {

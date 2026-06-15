@@ -10,6 +10,7 @@ import {
   getTasksByUserIdAndStatus,
   getTasksByTitle,
   getTasksByProjectId,
+  assignTaskToUser,
 } from './task.repository';
 import { CreateTaskDto, UpdateTaskDto, GetTasksQueryDto } from './task.dto';
 import { taskStatus } from '../../shared/constants/taskStatus';
@@ -104,12 +105,9 @@ const buildKanbanColumns = (tasks: Task[]) => {
   return { columns };
 };
 
-export const getKanbanBoardService = async (scope: 'all' | 'mine', userId: number) => {
+export const getKanbanBoardService = async (scope: 'all' | 'mine', projectId: number) => {
   if (scope === 'mine') {
-    if (!Number.isFinite(userId)) {
-      throw new Error('User ID is required for personal kanban board');
-    }
-    const tasks = await getTasksByUserId(userId);
+    const tasks = await getTasksByProjectId(projectId);
     return buildKanbanColumns(tasks);
   }
 
@@ -120,4 +118,9 @@ export const getKanbanBoardService = async (scope: 'all' | 'mine', userId: numbe
 export const getTasksByProjectIdService = async (projectId: number) => {
   const tasks = await getTasksByProjectId(projectId);
   return tasks;
+};
+
+export const assignTaskToUserService = async (taskId: number, userId: number) => {
+  const task = await assignTaskToUser(taskId, userId);
+  return task;
 };

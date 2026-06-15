@@ -30,7 +30,8 @@
         "view_users",
         "read_kanban_tasks",
         "generate_project_description",
-        "view_dashboard"
+        "view_dashboard",
+        "assign_task"
       ]
     },
     {

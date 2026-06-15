@@ -2,6 +2,7 @@ import { Router } from 'express';
 import * as taskController from './task.controller';
 import { authMiddleware } from '../../middleware/auth.middleware';
 import * as rbacMiddleware from '../../middleware/rbacMiddleware';
+import router from '../dashboard/dashboard.routes';
 
 const route = Router();
 
@@ -104,12 +105,19 @@ route.get(
 
 /****************************************
  * @swagger
- * /api/tasks/kanban/mine:
+ * /api/tasks/kanban/mine/{projectId}:
  *   get:
- *     summary: Get kanban board for the authenticated user's tasks
+ *     summary: Get kanban board for the authenticated user's tasks in a specific project
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Project ID
  *     responses:
  *       200:
  *         description: Kanban columns grouped by task status
@@ -132,7 +140,7 @@ route.get(
  *                           $ref: '#/components/schemas/Task'
  */
 route.get(
-  '/kanban/mine',
+  '/kanban/mine/:projectId',
   authMiddleware,
   rbacMiddleware.checkPermission('read_kanban_tasks'),
   taskController.getMyKanbanBoard,
@@ -362,6 +370,44 @@ route.put(
   authMiddleware,
   rbacMiddleware.checkPermission('update_task'),
   taskController.updateTask,
+);
+
+/****************************************
+ * @swagger
+ * /api/tasks/{taskId}/assign/{userId}:
+ *   post:
+ *     summary: Assign a task to a user
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Task ID
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: User ID to assign the task to
+ *     responses:
+ *       200:
+ *         description: Task assigned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ *       404:
+ *         description: Task or user not found
+ */
+route.post(
+  '/:taskId/assign/:userId',
+  authMiddleware,
+  rbacMiddleware.checkPermission('assign_task'),
+  taskController.assignTaskToUser,
 );
 
 export default route;
