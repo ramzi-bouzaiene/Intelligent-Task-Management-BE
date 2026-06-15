@@ -53,18 +53,21 @@ export const getTasksByQuery = async (req: Request, res: Response) => {
 };
 
 export const getKanbanBoard = async (req: Request, res: Response) => {
-  const userId = Number((req as any).user?.id);
-  const board = await taskService.getKanbanBoardService('all', userId);
+  const projectId = Number(req.params.projectId);
+  const board = await taskService.getKanbanBoardService('all', projectId);
   res.json(board);
 };
 
 export const getMyKanbanBoard = async (req: Request, res: Response) => {
-  const userId = Number((req as any).user?.id);
-  if (!Number.isFinite(userId)) {
-    return res.status(401).json({ error: 'Invalid user context' });
+  const projectId = Number(req.params.projectId);
+
+  if (!Number.isFinite(projectId)) {
+    return res.status(400).json({ error: 'Invalid projectId' });
   }
-  const board = await taskService.getKanbanBoardService('mine', userId);
-  res.json(board);
+
+  const board = await taskService.getKanbanBoardService('mine', projectId);
+
+  return res.json(board);
 };
 
 /*export const getTasksByStatus = async (req: Request, res: Response) => {
@@ -77,4 +80,20 @@ export const getTasksByProjectId = async (req: Request, res: Response) => {
   const projectId = Number(req.params.projectId);
   const tasks = await taskService.getTasksByProjectIdService(projectId);
   res.json(tasks);
+};
+
+export const assignTaskToUser = async (req: Request, res: Response) => {
+  const taskId = Number(req.params.taskId);
+  const userId = Number(req.params.userId);
+
+  if (!taskId || !userId) {
+    return res.status(400).json({ message: 'Invalid taskId or userId' });
+  }
+
+  await taskService.assignTaskToUserService(taskId, userId);
+
+  return res.status(200).json({
+    success: true,
+    message: 'Task assigned successfully',
+  });
 };

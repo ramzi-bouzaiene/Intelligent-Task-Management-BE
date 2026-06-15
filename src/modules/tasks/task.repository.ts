@@ -119,3 +119,12 @@ export const getTasksByProjectId = async (projectId: number): Promise<Task[]> =>
   const result = await pool.query(query, [projectId]);
   return result.rows;
 };
+
+export const assignTaskToUser = async (taskId: number, userId: number): Promise<Task> => {
+  const query = `
+    UPDATE tasks SET user_id = $1, updated_at = NOW() WHERE id = $2
+    RETURNING *;
+    `;
+  const result = await pool.query(query, [userId, taskId]);
+  return result.rows[0];
+};
